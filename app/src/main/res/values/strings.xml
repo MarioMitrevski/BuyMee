@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BuyMee</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_shops">Shops</string>
+    <string name="menu_cart">Cart</string>
+
+</resources>
