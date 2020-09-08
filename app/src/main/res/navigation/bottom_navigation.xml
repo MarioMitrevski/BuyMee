@@ -17,12 +17,43 @@
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/shopsFragment"
-        android:name="com.buymee.ShopsFragment"
+        android:name="com.buymee.shops.ShopListFragment"
         android:label="fragment_shops"
-        tools:layout="@layout/fragment_shops" />
+        tools:layout="@layout/fragment_shops" >
+        <action
+            android:id="@+id/action_shopsFragment_to_shopActivity"
+            app:destination="@id/shopActivity" />
+    </fragment>
     <fragment
         android:id="@+id/cartFragment"
         android:name="com.buymee.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" />
+    <activity
+        android:id="@+id/shopActivity"
+        android:name="com.buymee.shops.ShopActivity"
+        android:label="activity_shop"
+        tools:layout="@layout/activity_shop">
+
+        <argument
+            android:name="shopId"
+            app:argType="string" />
+        <argument
+            android:name="shopName"
+            app:argType="string" />
+        <argument android:name="shopDescription"
+            app:argType="string" />
+        <argument
+            android:name="categoryId"
+            app:argType="long" />
+        <argument
+            android:name="createdDate"
+            app:argType="string" />
+        <argument
+            android:name="shopLogoImage"
+            app:argType="string" />
+        <argument
+            android:name="featuredProducts"
+            app:argType="com.buymee.network.FeaturedProduct[]" />
+    </activity>
 </navigation>

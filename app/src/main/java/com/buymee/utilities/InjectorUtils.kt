@@ -1,16 +1,26 @@
 package com.buymee.utilities
 
 import android.content.Context
-import com.buymee.repositories.ShopsRepository
-import com.buymee.viewmodels.ShopsViewModelFactory
+import com.buymee.network.RetrofitInstance
+import com.buymee.shops.ShopViewModelFactory
+import com.buymee.shops.ShopsListViewModelFactory
+import com.buymee.viewmodels.HomeViewModelFactory
 
 object InjectorUtils {
 
-    private fun getShopsRepository(context: Context): ShopsRepository {
-        return ShopsRepository.getInstance(context)
+    fun provideShopsListViewModelFactory(context: Context): ShopsListViewModelFactory {
+        return ShopsListViewModelFactory(
+            RetrofitInstance.api
+        )
     }
 
-    fun provideShopsViewModelFactory(context: Context): ShopsViewModelFactory {
-        return ShopsViewModelFactory(getShopsRepository(context))
+    fun provideHomeViewModelFactory(context: Context): HomeViewModelFactory {
+        return HomeViewModelFactory()
+    }
+
+    fun provideShopViewModelFactory(context: Context): ShopViewModelFactory {
+        return ShopViewModelFactory(
+            RetrofitInstance.api
+        )
     }
 }

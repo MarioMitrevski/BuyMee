@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shops_navigation"
+    app:startDestination="@id/shopInfoFragment">
+    <fragment
+        android:id="@+id/shopInfoFragment"
+        android:name="com.buymee.shops.ShopInfoFragment"
+        android:label="fragment_shop_info"
+        tools:layout="@layout/fragment_shop_info" />
+    <fragment
+        android:id="@+id/shopProductsFragment"
+        android:name="com.buymee.shops.ShopProductsFragment"
+        android:label="fragment_shop_products"
+        tools:layout="@layout/fragment_shop_products" />
+</navigation>
