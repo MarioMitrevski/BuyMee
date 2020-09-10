@@ -8,4 +8,5 @@
     <string name="shop">Shop</string>
     <string name="products">Products</string>
     <string name="filter">Filter</string>
+    <string name="select_product_type">Select product type</string>
 </resources>

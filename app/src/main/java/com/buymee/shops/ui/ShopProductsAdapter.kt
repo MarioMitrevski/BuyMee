@@ -44,7 +44,7 @@ class ShopProductsAdapter constructor(
 
         fun bind(shopProduct: ShopProduct, shopProductClickListener: (String) -> Unit) {
             showShopProductData(shopProduct)
-            itemView.setOnClickListener {
+            productImage.setOnClickListener {
                 shopProductClickListener(shopProduct.productId)
             }
         }
@@ -52,13 +52,13 @@ class ShopProductsAdapter constructor(
         private fun showShopProductData(shopProduct: ShopProduct) {
             productName.text = shopProduct.productName
             productPrice.text = "$${shopProduct.price.toInt()}"
-            shopProduct.imageURL.let {
-                Picasso.get()
-                    .load(shopProduct.imageURL.toString())
-                    .placeholder(R.color.colorCard)
-                    .fit()
-                    .into(productImage)
-            }
+
+            Picasso.get()
+                .load(shopProduct.imageURL)
+                .placeholder(R.color.colorCard)
+                .fit()
+                .into(productImage)
+
         }
     }
 

@@ -10,16 +10,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.buymee.R
 import com.buymee.databinding.FragmentShopProductsBinding
 import com.buymee.shops.data.Order
-import com.buymee.shops.ui.ShopProductsAdapter
 import com.buymee.shops.data.Sort
+import com.buymee.shops.ui.ShopProductsAdapter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class ShopProductsFragment : Fragment() {
 
@@ -80,16 +80,22 @@ class ShopProductsFragment : Fragment() {
                 )
             }
         }
+        getShopProducts(
+            viewModel.shopDetails.shopId,
+            Sort.created_date,
+            Order.DESC,
+            null
+        )
     }
 
     private fun initShopProductsRecyclerView() {
         adapter = ShopProductsAdapter {
-            //viewModel.openProduct(it)
+            viewModel.selectedProductId = it
+            findNavController().navigate(R.id.action_shopMainFragment_to_productFragment)
         }
         binding.shopProductsList.adapter = adapter
         binding.shopProductsList.layoutManager = GridLayoutManager(activity, 2)
     }
-
 
     private fun getShopProducts(
         shopId: String,
@@ -99,12 +105,12 @@ class ShopProductsFragment : Fragment() {
     ) {
         fetchJob?.cancel()
         stateJob?.cancel()
-        fetchJob = viewLifecycleOwner.lifecycleScope.launch {
+        fetchJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getShopProducts(shopId, sort, order, categoryId).collectLatest {
                 adapter.submitData(it)
             }
         }
-        stateJob = viewLifecycleOwner.lifecycleScope.launch {
+        stateJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 when (loadStates.refresh) {
                     is LoadState.Loading -> viewModel.loading()

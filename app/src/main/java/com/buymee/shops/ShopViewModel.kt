@@ -22,6 +22,7 @@ class ShopViewModel constructor(
 ) : ViewModel() {
 
     lateinit var shopDetails: ShopDetails
+    lateinit var selectedProductId: String
     private val _loadingLiveData = MutableLiveData<ProgressLongBackgroundProcess>()
     val loadingLiveData: LiveData<ProgressLongBackgroundProcess>
         get() = _loadingLiveData

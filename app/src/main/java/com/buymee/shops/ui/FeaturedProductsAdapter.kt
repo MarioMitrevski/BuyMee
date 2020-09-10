@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.buymee.R
 import com.buymee.network.FeaturedProduct
@@ -48,28 +47,11 @@ class FeaturedProductsAdapter constructor(
             productName.text = featuredProduct.productName
             productPrice.text = "$${featuredProduct.price.toInt()}"
             Picasso.get()
-                .load(featuredProduct.imageURL.toString())
+                .load(featuredProduct.imageURL)
                 .placeholder(R.color.colorCard)
                 .fit()
                 .into(productImage)
         }
-    }
-
-    companion object {
-        private val FEATURED_PRODUCT_COMPARATOR =
-            object : DiffUtil.ItemCallback<FeaturedProduct>() {
-                override fun areItemsTheSame(
-                    oldItem: FeaturedProduct,
-                    newItem: FeaturedProduct
-                ): Boolean =
-                    oldItem.productId == newItem.productId
-
-                override fun areContentsTheSame(
-                    oldItem: FeaturedProduct,
-                    newItem: FeaturedProduct
-                ): Boolean =
-                    oldItem == newItem
-            }
     }
 
     override fun getItemCount(): Int {

@@ -30,4 +30,9 @@ interface ApiService {
         @Query("order") order: String?,
         @Query("categoryId") categoryId: Long?
     ): ShopProductsResponse
+
+    @GET("api/products/{product}")
+    fun getProduct(
+        @Path("product") productId: String
+    ):  Single<Response<ProductDetailsDTO>>
 }

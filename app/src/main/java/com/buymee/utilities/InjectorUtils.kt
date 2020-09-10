@@ -1,6 +1,7 @@
 package com.buymee.utilities
 
 import android.content.Context
+import com.buymee.common.ProductViewModelFactory
 import com.buymee.network.RetrofitInstance
 import com.buymee.shops.ShopViewModelFactory
 import com.buymee.shops.ShopsListViewModelFactory
@@ -20,6 +21,12 @@ object InjectorUtils {
 
     fun provideShopViewModelFactory(context: Context): ShopViewModelFactory {
         return ShopViewModelFactory(
+            RetrofitInstance.api
+        )
+    }
+
+    fun provideProductViewModelFactory(context: Context): ProductViewModelFactory {
+        return ProductViewModelFactory(
             RetrofitInstance.api
         )
     }

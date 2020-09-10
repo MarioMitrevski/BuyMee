@@ -98,3 +98,34 @@ data class ShopProduct(
     val imageURL: String,
     val shopId: String
 )
+
+data class ProductDetailsDTO(
+    val productId: String,
+    val productName: String,
+    val productDescription: String,
+    val price: Double,
+    val imagesUrls: List<String>,
+    val productItems: List<ProductItem>,
+    val productReviews: List<ProductReviewDTO>
+)
+
+data class ProductItem(
+    val productItemId: String,
+    val quantityInStock: Int,
+    val product: String,
+    val price: Double,
+    val attributes: Set<Attribute>
+)
+
+data class ProductReviewDTO(
+    val firstName: String,
+    val lastName: String,
+    val comment: String,
+    val grade: Int,
+    val createdDate: String
+)
+
+data class Attribute(
+    val attributeName: String,
+    val attributeValue: String
+)
