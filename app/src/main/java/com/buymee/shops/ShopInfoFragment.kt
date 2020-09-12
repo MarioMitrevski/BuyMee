@@ -11,6 +11,8 @@ import com.buymee.R
 import com.buymee.databinding.FragmentShopInfoBinding
 import com.buymee.shops.ui.FeaturedProductsAdapter
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ShopInfoFragment : Fragment() {
 
@@ -35,6 +37,11 @@ class ShopInfoFragment : Fragment() {
 
     private fun initViews() {
         binding.shopName.text = viewModel.shopDetails.shopName
+        val srcDf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val date = srcDf.parse(viewModel.shopDetails.createdDate)
+        val calendar = Calendar.getInstance(Locale.getDefault())
+        calendar.timeInMillis = date.time
+        binding.sinceDate.text = "Since ${calendar.get(Calendar.YEAR)}"
         Picasso.get()
             .load(viewModel.shopDetails.shopLogoImage)
             .placeholder(R.color.colorCard)
@@ -46,12 +53,11 @@ class ShopInfoFragment : Fragment() {
         adapter = FeaturedProductsAdapter(
             viewModel.shopDetails.products.take(4)
         ) {
-            //viewModel.openProduct(it)
+           // viewModel.openProduct(it)
         }
         binding.featuredProducts.adapter = adapter
         binding.featuredProducts.layoutManager =
             GridLayoutManager(activity, 2)
-        binding.featuredProducts.isNestedScrollingEnabled=false
     }
 
     override fun onDestroy() {

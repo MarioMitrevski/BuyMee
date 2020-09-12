@@ -105,7 +105,7 @@ data class ProductDetailsDTO(
     val productDescription: String,
     val price: Double,
     val imagesUrls: List<String>,
-    val productItems: List<ProductItem>,
+    var productItems: List<ProductItem>,
     val productReviews: List<ProductReviewDTO>
 )
 
@@ -128,4 +128,10 @@ data class ProductReviewDTO(
 data class Attribute(
     val attributeName: String,
     val attributeValue: String
+)
+
+data class Category(
+    val categoryId: Long,
+    val superCategoryId: Long?,
+    val categoryName: String
 )

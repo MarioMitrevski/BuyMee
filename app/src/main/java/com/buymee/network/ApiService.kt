@@ -35,4 +35,16 @@ interface ApiService {
     fun getProduct(
         @Path("product") productId: String
     ):  Single<Response<ProductDetailsDTO>>
+
+    @GET("api/categories/all")
+    fun getCategories() : Single<Response<List<Category>>>
+
+    @GET("api/products/all")
+    suspend fun getProducts(
+        @Query("page") page: Int?,
+        @Query("page-size") size: Int?,
+        @Query("sortBy") sort: String?,
+        @Query("order") order: String?,
+        @Query("categoryId") categoryId: Long?
+    ): ShopProductsResponse
 }

@@ -40,7 +40,8 @@ class ProductViewModel constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally { _liveData.value = ProductFetchState.ProcessDone }
             .subscribe({
-                _productDTOliveData.value = it!!
+                it!!.productItems = it.productItems.sortedBy { pi -> pi.price }.toList()
+                _productDTOliveData.value = it
             }, {
                 val exception =
                     when (it) {
@@ -66,4 +67,9 @@ sealed class ProductFetchState {
     object Loading : ProductFetchState()
     object ProcessDone : ProductFetchState()
     data class Error(val throwable: Throwable) : ProductFetchState()
+}
+
+enum class ProductType {
+    SHOP,
+    SEARCH
 }

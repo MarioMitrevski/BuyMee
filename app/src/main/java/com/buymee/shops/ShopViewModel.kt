@@ -15,6 +15,7 @@ import com.buymee.shops.data.Order
 import com.buymee.shops.data.ShopProductsPagingSource
 import com.buymee.shops.data.Sort
 import com.buymee.viewmodels.ProgressLongBackgroundProcess
+import com.buymee.viewmodels.ToolbarElementsVisibility
 import kotlinx.coroutines.flow.Flow
 
 class ShopViewModel constructor(
@@ -26,6 +27,10 @@ class ShopViewModel constructor(
     private val _loadingLiveData = MutableLiveData<ProgressLongBackgroundProcess>()
     val loadingLiveData: LiveData<ProgressLongBackgroundProcess>
         get() = _loadingLiveData
+
+    private val _toolbarLiveData = MutableLiveData<ToolbarElementsVisibility>()
+    val toolbarLiveData: LiveData<ToolbarElementsVisibility>
+        get() = _toolbarLiveData
 
     fun loading() {
         _loadingLiveData.value = ProgressLongBackgroundProcess.Loading
@@ -57,6 +62,15 @@ class ShopViewModel constructor(
                 )
             }
         ).flow.cachedIn(viewModelScope)
+    }
+
+    fun toolBarElementsVisibility(
+        isBackButtonVisible: Boolean,
+        isShareButtonVisible: Boolean,
+        toolbarTitleText: String = shopDetails.shopName
+    ) {
+        _toolbarLiveData.value =
+            ToolbarElementsVisibility(isBackButtonVisible, isShareButtonVisible, toolbarTitleText)
     }
 }
 

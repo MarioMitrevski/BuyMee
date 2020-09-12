@@ -1,6 +1,7 @@
 package com.buymee
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initViews()
         navController = findNavController(R.id.nav_host_fragment)
         binding.bottomNavigation.setupWithNavController(navController)
 
@@ -39,5 +41,18 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         })
+        viewModel.toolbarLiveData.observe(this, Observer {
+            if (it.isShareButtonVisible) binding.backBtn.visibility =
+                View.VISIBLE else binding.backBtn.visibility = View.INVISIBLE
+            if (it.isShareButtonVisible) binding.shareBtn.visibility =
+                View.VISIBLE else binding.shareBtn.visibility = View.INVISIBLE
+            binding.toolbarTitle.text = it.toolbarTitleText
+        })
+    }
+
+    private fun initViews() {
+        binding.backBtn.setOnClickListener {
+            onBackPressed()
+        }
     }
 }

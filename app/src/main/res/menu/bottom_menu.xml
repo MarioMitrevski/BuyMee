@@ -6,7 +6,7 @@
             android:icon="@drawable/ic_home"
             android:title="@string/menu_home"/>
     <item
-            android:id="@+id/searchFragment"
+            android:id="@+id/search_fragment"
             android:enabled="true"
             android:icon="@drawable/ic_search"
             android:title="@string/menu_search"/>

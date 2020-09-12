@@ -6,4 +6,5 @@
     <color name="colorCard">#99F0F0F0</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="review_split_color">#110F0F0F</color>
 </resources>

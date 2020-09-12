@@ -1,4 +1,4 @@
-package com.buymee.shops
+package com.buymee.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,27 +15,29 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.buymee.R
 import com.buymee.common.ProductType
-import com.buymee.databinding.FragmentShopProductsBinding
+import com.buymee.databinding.FragmentProductsBinding
 import com.buymee.search.ui.ShopProductsAdapter
 import com.buymee.shops.data.Order
 import com.buymee.shops.data.Sort
+import com.buymee.viewmodels.HomeViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
-class ShopProductsFragment : Fragment() {
+class ProductsFragment : Fragment() {
 
     private var fetchJob: Job? = null
     private var stateJob: Job? = null
-    private var _binding: FragmentShopProductsBinding? = null
+    private var _binding: FragmentProductsBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: ShopViewModel by activityViewModels()
     private lateinit var adapter: ShopProductsAdapter
+    private val viewModel: SearchViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentShopProductsBinding.inflate(inflater, container, false)
+        _binding = FragmentProductsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -55,46 +57,44 @@ class ShopProductsFragment : Fragment() {
         editTextFilledExposedDropdown.setOnItemClickListener { adapterView, view, i, l ->
 
             when (i) {
-                0 -> getShopProducts(
-                    viewModel.shopDetails.shopId,
+                0 -> getProducts(
                     Sort.created_date,
                     Order.DESC,
-                    null
+                    viewModel.categoryIdClicked
                 )
-                1 -> getShopProducts(
-                    viewModel.shopDetails.shopId,
+                1 -> getProducts(
                     Sort.created_date,
                     Order.ASC,
-                    null
+                    viewModel.categoryIdClicked
                 )
-                2 -> getShopProducts(
-                    viewModel.shopDetails.shopId,
+                2 -> getProducts(
                     Sort.price,
                     Order.DESC,
-                    null
+                    viewModel.categoryIdClicked
                 )
-                3 -> getShopProducts(
-                    viewModel.shopDetails.shopId,
+                3 -> getProducts(
                     Sort.price,
                     Order.ASC,
-                    null
+                    viewModel.categoryIdClicked
                 )
             }
         }
-        getShopProducts(
-            viewModel.shopDetails.shopId,
+        getProducts(
             Sort.created_date,
             Order.DESC,
-            null
+            viewModel.categoryIdClicked
+        )
+        homeViewModel.toolBarElementsVisibility(
+            isBackButtonVisible = false,
+            isShareButtonVisible = false
         )
     }
 
     private fun initShopProductsRecyclerView() {
         adapter = ShopProductsAdapter {
-            viewModel.selectedProductId = it
-            val action = ShopMainFragmentDirections.actionShopMainFragmentToProductFragment(
-                viewModel.selectedProductId,
-                ProductType.SHOP
+            val action = ProductsFragmentDirections.actionProductsFragmentToProductFragment(
+                it,
+                ProductType.SEARCH
             )
             findNavController().navigate(action)
         }
@@ -102,8 +102,7 @@ class ShopProductsFragment : Fragment() {
         binding.shopProductsList.layoutManager = GridLayoutManager(activity, 2)
     }
 
-    private fun getShopProducts(
-        shopId: String,
+    private fun getProducts(
         sort: Sort,
         order: Order,
         categoryId: Long?
@@ -111,17 +110,17 @@ class ShopProductsFragment : Fragment() {
         fetchJob?.cancel()
         stateJob?.cancel()
         fetchJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getShopProducts(shopId, sort, order, categoryId).collectLatest {
+            viewModel.getProducts(sort, order, categoryId).collectLatest {
                 adapter.submitData(it)
             }
         }
         stateJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 when (loadStates.refresh) {
-                    is LoadState.Loading -> viewModel.loading()
-                    is LoadState.NotLoading -> viewModel.processDone()
+                    is LoadState.Loading -> homeViewModel.loading()
+                    is LoadState.NotLoading -> homeViewModel.processDone()
                     is LoadState.Error -> {
-                        viewModel.processDone()
+                        homeViewModel.processDone()
                         Toast.makeText(
                             context,
                             (loadStates.refresh as LoadState.Error).error.message,
@@ -132,7 +131,7 @@ class ShopProductsFragment : Fragment() {
             }
         }
         stateJob?.invokeOnCompletion {
-            viewModel.processDone()
+            homeViewModel.processDone()
         }
     }
 

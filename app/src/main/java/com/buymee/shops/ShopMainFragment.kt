@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.buymee.databinding.FragmentShopMainBinding
-import com.buymee.shops.ShopInfoFragment
-import com.buymee.shops.ShopProductsFragment
 import com.buymee.shops.ui.ShopFragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -17,6 +16,7 @@ class ShopMainFragment : Fragment() {
 
     private var _binding: FragmentShopMainBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: ShopViewModel by activityViewModels()
     private lateinit var viewPager2: ViewPager2
     private lateinit var shopFragmentStateAdapter: ShopFragmentStateAdapter
     private lateinit var tabLayout: TabLayout
@@ -50,6 +50,11 @@ class ShopMainFragment : Fragment() {
                 }
             }
         }.attach()
+        viewModel.toolBarElementsVisibility(
+            isBackButtonVisible = true,
+            isShareButtonVisible = true,
+            toolbarTitleText = viewModel.shopDetails.shopName
+        )
     }
 
     override fun onDestroy() {

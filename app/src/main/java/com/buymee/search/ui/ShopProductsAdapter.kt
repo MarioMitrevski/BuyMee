@@ -1,4 +1,4 @@
-package com.buymee.shops.ui
+package com.buymee.search.ui
 
 import android.view.LayoutInflater
 import android.view.View

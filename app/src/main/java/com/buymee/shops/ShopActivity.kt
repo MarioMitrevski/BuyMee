@@ -1,6 +1,7 @@
 package com.buymee.shops
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +24,15 @@ class ShopActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityShopBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel.shopDetails = ShopDetails(args.shopId, args.shopName, args.shopDescription, args.categoryId, args.createdDate, args.shopLogoImage, args.featuredProducts.toList())
+        viewModel.shopDetails = ShopDetails(
+            args.shopId,
+            args.shopName,
+            args.shopDescription,
+            args.categoryId,
+            args.createdDate,
+            args.shopLogoImage,
+            args.featuredProducts.toList()
+        )
         initViews()
         binding.toolbarTitle.text = viewModel.shopDetails.shopName
 
@@ -37,6 +46,19 @@ class ShopActivity : AppCompatActivity() {
                 }
             }
         })
+
+        viewModel.toolbarLiveData.observe(this, Observer {
+            if (it.isShareButtonVisible) binding.backBtn.visibility =
+                View.VISIBLE else binding.backBtn.visibility = View.INVISIBLE
+            if (it.isShareButtonVisible) binding.shareBtn.visibility =
+                View.VISIBLE else binding.shareBtn.visibility = View.INVISIBLE
+            binding.toolbarTitle.text = it.toolbarTitleText
+        })
+        viewModel.toolBarElementsVisibility(
+            isBackButtonVisible = true,
+            isShareButtonVisible = true,
+            toolbarTitleText = viewModel.shopDetails.shopName
+        )
     }
 
     private fun initViews() {
