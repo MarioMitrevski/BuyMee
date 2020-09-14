@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.buymee.CartFragment"
+        android:name="com.buymee.cart.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" />
     <activity
