@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.buymee.HomeActivity
 import com.buymee.R
 import com.buymee.common.ui.ProductImagesAdapter
 import com.buymee.common.ui.ProductReviewsAdapter
@@ -46,22 +47,22 @@ class ProductFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (args.productType == ProductType.SHOP) {
-            activity?.let {
-                shopViewModel =
-                    ViewModelProvider(requireActivity()).get(ShopViewModel::class.java)
-            }
-        } else {
+        if(activity?.javaClass == HomeActivity::class.java){
             activity?.let {
                 homeViewModel =
                     ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
+            }
+        }else{
+            activity?.let {
+                shopViewModel =
+                    ViewModelProvider(requireActivity()).get(ShopViewModel::class.java)
             }
         }
         initViews()
         viewModel.liveData.observe(viewLifecycleOwner, Observer {
             when (it) {
-                is ProductFetchState.Loading -> if (args.productType == ProductType.SHOP) shopViewModel?.loading() else homeViewModel?.loading()
-                is ProductFetchState.ProcessDone -> if (args.productType == ProductType.SHOP) shopViewModel?.processDone() else homeViewModel?.processDone()
+                is ProductFetchState.Loading -> shopViewModel?.loading() ?: homeViewModel?.loading()
+                is ProductFetchState.ProcessDone -> shopViewModel?.processDone() ?: homeViewModel?.processDone()
                 is ProductFetchState.Error -> {
                     Toast.makeText(
                         context,
@@ -86,8 +87,13 @@ class ProductFragment : Fragment() {
                 toolbarTitleText = it.productName
             )
         })
-        viewModel.openProduct(args.productId)
 
+        if(homeViewModel!=null && homeViewModel!!.isDeepLink){
+            homeViewModel!!.isDeepLink = false
+            viewModel.openProduct(homeViewModel!!.selectedProductId)
+            return
+        }
+        viewModel.openProduct(args.productId)
     }
 
     private fun initViews() {
@@ -97,18 +103,17 @@ class ProductFragment : Fragment() {
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = imagesAdapter
         }
+
+        reviewsAdapter = ProductReviewsAdapter(listOf())
+        binding.reviewsList.apply {
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            this.adapter = reviewsAdapter
+        }
     }
 
     private fun populateProductViews(product: ProductDetailsDTO) {
         imagesAdapter.updateDataSet(
-            listOf(
-                product.imagesUrls[0],
-                product.imagesUrls[0],
-                product.imagesUrls[0],
-                product.imagesUrls[0],
-                product.imagesUrls[0],
-                product.imagesUrls[0]
-            )
+            product.imagesUrls
         )
         binding.productName.text = product.productName
         binding.productDescription.text = product.productDescription
@@ -126,12 +131,6 @@ class ProductFragment : Fragment() {
 
         editTextFilledExposedDropdown.setOnItemClickListener { adapterView, view, i, l ->
 
-        }
-
-        reviewsAdapter = ProductReviewsAdapter(listOf())
-        binding.reviewsList.apply {
-            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            this.adapter = reviewsAdapter
         }
         reviewsAdapter.updateDataSet(product.productReviews)
     }

@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.buymee.R
+import com.buymee.common.ProductType
 import com.buymee.databinding.FragmentShopInfoBinding
 import com.buymee.shops.ui.FeaturedProductsAdapter
 import com.squareup.picasso.Picasso
@@ -53,7 +55,12 @@ class ShopInfoFragment : Fragment() {
         adapter = FeaturedProductsAdapter(
             viewModel.shopDetails.products.take(4)
         ) {
-           // viewModel.openProduct(it)
+            viewModel.selectedProductId = it
+            val action = ShopMainFragmentDirections.actionShopMainFragmentToProductFragment(
+                viewModel.selectedProductId,
+                ProductType.SHOP
+            )
+            findNavController().navigate(action)
         }
         binding.featuredProducts.adapter = adapter
         binding.featuredProducts.layoutManager =

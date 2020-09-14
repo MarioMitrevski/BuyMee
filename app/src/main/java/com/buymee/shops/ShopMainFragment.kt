@@ -52,7 +52,7 @@ class ShopMainFragment : Fragment() {
         }.attach()
         viewModel.toolBarElementsVisibility(
             isBackButtonVisible = true,
-            isShareButtonVisible = true,
+            isShareButtonVisible = false,
             toolbarTitleText = viewModel.shopDetails.shopName
         )
     }

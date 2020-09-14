@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.buymee.R
 import com.buymee.databinding.FragmentSearchBinding
 import com.buymee.network.Category
 import com.buymee.search.ui.CategoriesAdapter
@@ -62,6 +63,9 @@ class SearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        if(homeViewModel.isDeepLink){
+            findNavController().navigate(R.id.action_search_fragment_to_productsFragment)
+        }
         initRecyclerViews()
         initViewAllBtn()
         viewModel.liveData.observe(viewLifecycleOwner, Observer {
@@ -85,6 +89,7 @@ class SearchFragment : Fragment() {
             isBackButtonVisible = false,
             isShareButtonVisible = false
         )
+
     }
 
     private fun initRecyclerViews() {

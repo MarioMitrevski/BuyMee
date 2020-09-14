@@ -1,5 +1,7 @@
 package com.buymee
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -48,11 +50,28 @@ class HomeActivity : AppCompatActivity() {
                 View.VISIBLE else binding.shareBtn.visibility = View.INVISIBLE
             binding.toolbarTitle.text = it.toolbarTitleText
         })
+        val data: Uri? = intent?.data
+        data?.let {
+            viewModel.isDeepLink = true
+            viewModel.selectedProductId = it.lastPathSegment.toString()
+        }
     }
 
     private fun initViews() {
         binding.backBtn.setOnClickListener {
             onBackPressed()
+            viewModel.selectedProductId = ""
+        }
+        binding.shareBtn.setOnClickListener {
+            if(viewModel.selectedProductId!=""){
+                val share = Intent.createChooser(Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "http://192.168.0.34:3000/product/${viewModel.selectedProductId}")
+                    putExtra(Intent.EXTRA_TITLE, "Share link")
+                    type = "text/plain"
+                }, null)
+                startActivity(share)
+            }
         }
     }
 }

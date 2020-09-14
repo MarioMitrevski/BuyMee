@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.buymee.databinding.FragmentHomeBinding
 import com.buymee.viewmodels.HomeViewModel
 
@@ -30,5 +31,8 @@ class HomeFragment : Fragment() {
             isBackButtonVisible = false,
             isShareButtonVisible = false
         )
+        if(homeViewModel.isDeepLink){
+            findNavController().navigate(R.id.action_homeFragment_to_search_fragment)
+        }
     }
 }

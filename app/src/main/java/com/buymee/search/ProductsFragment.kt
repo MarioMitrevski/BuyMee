@@ -43,7 +43,9 @@ class ProductsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        if(homeViewModel.isDeepLink){
+            findNavController().navigate(R.id.action_productsFragment_to_productFragment)
+        }
         initShopProductsRecyclerView()
 
         val adapter = ArrayAdapter(
@@ -88,10 +90,12 @@ class ProductsFragment : Fragment() {
             isBackButtonVisible = false,
             isShareButtonVisible = false
         )
+
     }
 
     private fun initShopProductsRecyclerView() {
         adapter = ShopProductsAdapter {
+            homeViewModel.selectedProductId = it
             val action = ProductsFragmentDirections.actionProductsFragmentToProductFragment(
                 it,
                 ProductType.SEARCH

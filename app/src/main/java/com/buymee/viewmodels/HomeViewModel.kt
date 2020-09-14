@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 
 class HomeViewModel : ViewModel() {
 
+    lateinit var selectedProductId: String
+    var isDeepLink: Boolean = false
     private val _loadingLiveData = MutableLiveData<ProgressLongBackgroundProcess>()
     val loadingLiveData: LiveData<ProgressLongBackgroundProcess>
         get() = _loadingLiveData

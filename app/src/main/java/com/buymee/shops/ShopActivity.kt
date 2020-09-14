@@ -1,5 +1,6 @@
 package com.buymee.shops
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -48,7 +49,7 @@ class ShopActivity : AppCompatActivity() {
         })
 
         viewModel.toolbarLiveData.observe(this, Observer {
-            if (it.isShareButtonVisible) binding.backBtn.visibility =
+            if (it.isBackButtonVisible) binding.backBtn.visibility =
                 View.VISIBLE else binding.backBtn.visibility = View.INVISIBLE
             if (it.isShareButtonVisible) binding.shareBtn.visibility =
                 View.VISIBLE else binding.shareBtn.visibility = View.INVISIBLE
@@ -56,7 +57,7 @@ class ShopActivity : AppCompatActivity() {
         })
         viewModel.toolBarElementsVisibility(
             isBackButtonVisible = true,
-            isShareButtonVisible = true,
+            isShareButtonVisible = false,
             toolbarTitleText = viewModel.shopDetails.shopName
         )
     }
@@ -64,6 +65,28 @@ class ShopActivity : AppCompatActivity() {
     private fun initViews() {
         binding.backBtn.setOnClickListener {
             onBackPressed()
+            viewModel.selectedProductId = ""
+        }
+        binding.shareBtn.setOnClickListener {
+            if(viewModel.selectedProductId!=""){
+                //Share product
+                val share = Intent.createChooser(Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "http://192.168.0.34:3000/product/${viewModel.selectedProductId}")
+                    putExtra(Intent.EXTRA_TITLE, "Share link")
+                    type = "text/plain"
+                }, null)
+                startActivity(share)
+            }else{
+                //Share shop
+                val share = Intent.createChooser(Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "http://192.168.0.34:3000/shop/${viewModel.shopDetails.shopId}")
+                    putExtra(Intent.EXTRA_TITLE, "Share link")
+                    type = "text/plain"
+                }, null)
+                startActivity(share)
+            }
         }
     }
 }
