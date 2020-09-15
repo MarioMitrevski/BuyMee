@@ -20,4 +20,9 @@
             android:enabled="true"
             android:icon="@drawable/ic_cart"
             android:title="@string/menu_cart"/>
+    <item
+        android:id="@+id/userFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_sharp_person_24"
+        android:title="@string/menu_user"/>
 </menu>

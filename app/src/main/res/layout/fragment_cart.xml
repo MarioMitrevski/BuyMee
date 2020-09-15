@@ -1,114 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".cart.CartFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/sign_in_text"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:text="Sign In to see your shopping cart"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/cart_img"
+        app:layout_constraintEnd_toEndOf="@+id/cart_img"
+        app:layout_constraintStart_toStartOf="@+id/cart_img" />
+
+    <ImageView
+        android:id="@+id/cart_img"
+        android:layout_width="200dp"
+        android:visibility="gone"
+        android:layout_height="200dp"
+        android:src="@drawable/cart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cart" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:visibility="gone"
+        android:backgroundTint="@color/black"
+        android:text="Sign In"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:cornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cart_img" />
+    <ScrollView
+        android:id="@+id/cart"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/cart_recycler_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="1dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/cart_button"
-            android:layout_width="350dp"
-            android:layout_height="49dp"
-            android:layout_marginBottom="16dp"
-            android:text="Continue to Checkout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.491"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.gridlayout.widget.GridLayout
-            android:id="@+id/gridLayout"
-            android:layout_width="350dp"
-            android:layout_height="150dp"
-            android:layout_marginBottom="88dp"
-            app:columnCount="2"
-            app:layout_constraintBottom_toTopOf="@+id/cart_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.516"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cart_recycler_view"
-            app:layout_constraintVertical_bias="0.0"
-            app:orientation="horizontal"
-            app:rowCount="3">
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cart_recycler_view"
+                android:layout_width="match_parent"
+                android:nestedScrollingEnabled="false"
                 android:layout_height="wrap_content"
-                android:text="SubTotal"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="30dp"
-                app:layout_column="0"
-                app:layout_row="0" />
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/checkout"
+                android:layout_width="350dp"
+                android:layout_height="49dp"
+                android:layout_marginBottom="16dp"
+                android:text="Continue to Checkout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.491"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.gridlayout.widget.GridLayout
+                android:id="@+id/gridLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Discount"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="30dp"
-                app:layout_column="0"
-                app:layout_row="1" />
+                android:layout_marginBottom="88dp"
+                app:columnCount="2"
+                app:layout_constraintBottom_toTopOf="@+id/checkout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.516"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cart_recycler_view"
+                app:layout_constraintVertical_bias="0.0"
+                app:orientation="horizontal"
+                app:rowCount="3">
 
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                app:layout_column="0"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="30dp"
-                app:layout_row="2" />
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:text="Total"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_column="0"
+                    app:layout_row="2" />
 
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$62.00"
-                android:layout_marginStart="200dp"
-                android:layout_marginBottom="30dp"
-                app:layout_column="1"
-                app:layout_row="0" />
+                <TextView
+                    android:id="@+id/totalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="200dp"
+                    android:layout_marginBottom="30dp"
+                    android:text="$60.00"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_column="1"
+                    app:layout_row="2" />
+            </androidx.gridlayout.widget.GridLayout>
 
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$2.00"
-                android:layout_marginStart="200dp"
-                android:layout_marginBottom="30dp"
-                app:layout_column="1"
-                app:layout_row="1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$60.00"
-                android:textStyle="bold"
-                android:layout_marginStart="200dp"
-                android:layout_marginBottom="30dp"
-                android:textSize="15sp"
-                app:layout_column="1"
-                app:layout_row="2" />
-        </androidx.gridlayout.widget.GridLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

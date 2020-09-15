@@ -8,31 +8,51 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.buymee.R
+import com.buymee.network.CartItem
 import com.squareup.picasso.Picasso
 
+class CartAdapter(
+    private var cartItems: List<CartItem>
+) : RecyclerView.Adapter<CartAdapter.CartItemViewHolder>() {
 
-class CartAdapter : RecyclerView.Adapter<CartAdapter.MyViewHolder>(){
-
-    private val  myProducts = listOf<String>("Product1", "Product2", "Product3")
-
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var productName: TextView = itemView.findViewById(R.id.productItemName)
-        val ivBasicImage : ImageView = itemView.findViewById(R.id.productItemImage)
-
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): CartAdapter.CartItemViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.cart_item, parent, false)
+        return CartItemViewHolder(view)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.cart_item, parent, false) as View
-        return MyViewHolder(v)
+    override fun onBindViewHolder(
+        holder: CartAdapter.CartItemViewHolder,
+        position: Int
+    ) {
+        holder.bind(cartItems[position])
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val imageUri = "https://i.imgur.com/tGbaZCY.jpg"
-        Picasso.get().load(imageUri).into(holder.ivBasicImage)
-        holder.productName.text = myProducts[position]
+    inner class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val productItemImage: ImageView = view.findViewById(R.id.productItemImage)
+        private val productItemName: TextView = view.findViewById(R.id.productItemName)
+        private val productCartQuantity: TextView = view.findViewById(R.id.productCartQuantity)
+
+        fun bind(cartItem: CartItem) {
+            productCartQuantity.text = "$${cartItem.cartItemQuantity}"
+            productItemName.text = "${cartItem.productName}"
+            Picasso.get()
+                .load(cartItem.imageUrl)
+                .placeholder(R.color.colorCard)
+                .fit()
+                .into(productItemImage)
+        }
+    }
+
+    fun updateDataSet(newDataSet: List<CartItem>) {
+        cartItems = newDataSet.toList()
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
-        return myProducts.size
+        return cartItems.size
     }
 }

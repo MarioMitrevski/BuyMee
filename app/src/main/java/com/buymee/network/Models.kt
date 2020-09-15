@@ -135,3 +135,28 @@ data class Category(
     val superCategoryId: Long?,
     val categoryName: String
 )
+
+data class LoginRequest(
+    val username: String,
+    val password: String
+)
+
+data class AddToCartRequest(
+    val productItemId: String,
+    val cartItemQuantity: String
+)
+
+data class CartResponse(
+    val cartId: String,
+    val cartItems: List<CartItem>,
+    val subTotal: Double,
+    val discount: Double,
+    val total: Double
+)
+
+data class CartItem(
+    val cartItemId: String,
+    val productName: String,
+    val imageUrl: String,
+    val cartItemQuantity: Int
+)

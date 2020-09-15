@@ -89,4 +89,9 @@
             android:name="productType"
             app:argType="com.buymee.common.ProductType" />
     </fragment>
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.buymee.user.UserFragment"
+        android:label="fragment_user"
+        tools:layout="@layout/fragment_user" />
 </navigation>

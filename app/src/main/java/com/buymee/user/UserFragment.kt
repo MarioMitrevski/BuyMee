@@ -1,4 +1,4 @@
-package com.buymee.cart
+package com.buymee.user
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,118 +9,74 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.buymee.common.LoginDialog
 import com.buymee.common.RegisterDialog
-import com.buymee.databinding.FragmentCartBinding
-import com.buymee.network.CartResponse
-import com.buymee.user.LoginState
+import com.buymee.data.UserPrefs
+import com.buymee.databinding.FragmentUserBinding
 import com.buymee.utilities.InjectorUtils
 import com.buymee.viewmodels.HomeViewModel
-import kotlinx.android.synthetic.main.fragment_cart.*
 
-class CartFragment : Fragment() {
+class UserFragment : Fragment() {
 
-    private var _binding: FragmentCartBinding? = null
+    private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: CartViewModel by activityViewModels {
-        InjectorUtils.provideCartViewModelFactory(requireActivity().applicationContext)
+    private val viewModel: UserViewModel by activityViewModels {
+        InjectorUtils.provideUserViewModelFactory(requireActivity().applicationContext)
     }
     private val homeViewModel: HomeViewModel by activityViewModels()
-    private lateinit var cartItemsAdapter: CartAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCartBinding.inflate(inflater, container, false)
+        _binding = FragmentUserBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        cartItemsAdapter = CartAdapter(listOf())
-        cart_recycler_view.apply {
-            layoutManager =
-                LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-            adapter = cartItemsAdapter
-        }
 
         viewModel.loginLiveData.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is LoginState.SuccessfulLogin -> {
                     homeViewModel.setSession(true)
-                    viewModel.getCart()
                 }
-                is LoginState.Error -> {
-                    Toast.makeText(
-                        context,
-                        it.throwable.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    homeViewModel.setSession(false)
-                }
-
+                is LoginState.Error -> Toast.makeText(
+                    context,
+                    it.throwable.message,
+                    Toast.LENGTH_SHORT
+                ).show()
                 is LoginState.Loading -> homeViewModel.loading()
                 is LoginState.ProcessDone -> homeViewModel.processDone()
             }
 
         })
-        homeViewModel.sessionLiveData.observe(viewLifecycleOwner, Observer {
-            if (it.isSignedIn) {
+
+        homeViewModel.sessionLiveData.observe( viewLifecycleOwner, Observer {
+            if(it.isSignedIn){
+                binding.logout.visibility = View.VISIBLE
                 binding.signIn.visibility = View.GONE
-                binding.cartImg.visibility = View.GONE
-                binding.signInText.visibility = View.GONE
-                binding.cart.visibility = View.VISIBLE
-            } else {
+            }else{
+                binding.logout.visibility = View.GONE
                 binding.signIn.visibility = View.VISIBLE
-                binding.cartImg.visibility = View.VISIBLE
-                binding.signInText.visibility = View.VISIBLE
-                binding.cart.visibility = View.GONE
-
-            }
-        })
-
-        viewModel.cartFetchLiveData.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is CartState.CartFetched -> {
-                    homeViewModel.setSession(true)
-                    populateCarViews(viewModel.cart!!)
-                    //todo viewModel.cart
-                }
-                is CartState.Error -> handleException(it.throwable.message)
-                is CartState.Loading -> homeViewModel.loading()
-                is CartState.ProcessDone -> homeViewModel.processDone()
             }
         })
         binding.signIn.setOnClickListener {
             showLoginDialog()
         }
-        viewModel.getCart()
-    }
-
-    private fun populateCarViews(cart: CartResponse?) {
-        cartItemsAdapter.updateDataSet(
-            cart?.cartItems ?: listOf()
-        )
-        binding.totalPrice.text = "$${cart?.total}"
-    }
-
-    private fun handleException(message: String?) {
-        when (message) {
-            "Unauthorized" -> {
-                homeViewModel.setSession(false)
-            }
-            "Not Found" -> {
-                Toast.makeText(context, "Your cart is empty", Toast.LENGTH_SHORT).show()
-                homeViewModel.setSession(true)
-
-            }
-            else -> {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                homeViewModel.setSession(false)
-
-            }
+        binding.logout.setOnClickListener {
+            viewModel.logout()
+            Toast.makeText(
+                context,
+                "You are now logged out!",
+                Toast.LENGTH_SHORT
+            ).show()
+            homeViewModel.setSession(false)
+        }
+        if(UserPrefs.getInstance(requireContext()).getToken()!=""){
+            homeViewModel.setSession(true)
+        }else{
+            homeViewModel.setSession(false)
         }
     }
 
@@ -168,4 +124,8 @@ class CartFragment : Fragment() {
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }
