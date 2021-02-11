@@ -96,6 +96,7 @@ class CartFragment : Fragment() {
         binding.signIn.setOnClickListener {
             showLoginDialog()
         }
+        homeViewModel.toolBarElementsVisibility(false, isShareButtonVisible = false)
         viewModel.getCart()
     }
 
